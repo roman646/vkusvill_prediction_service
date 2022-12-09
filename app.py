@@ -24,10 +24,10 @@ def download_result():
 @app.route('/upload_file', methods=['GET', 'POST'])
 def upload():
     if request.method == "POST":
-        names = os.listdir('static')
+        names = os.listdir()
         for i in names:
-            if os.path.isfile(i):
-                os.remove(f'static/{i}')
+            if os.path.isfile(i) and i == 'profitability_prediction.xlsx':
+                os.remove(i)
 
         file = request.files["file"]
 
@@ -38,6 +38,7 @@ def upload():
             try:
                 model = ProfitabilityModels(INPUT_FILE_NAME)
                 result = model.make_predictions()
+                logging.info(result)
                 result.to_excel(OUTPUT_FILE_NAME)
             except Exception as e:
                 logging.error('Some error with prediction')
