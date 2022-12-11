@@ -9,7 +9,9 @@ class ProfitabilityModels:
         self.data = pd.read_excel(sales_data, engine='openpyxl')
         logging.info('Loading data for prediction')
         self.data['profitability'] = (self.data['sell_price'] * self.data['amount']).pct_change()
-        self.STORE_IDS = ['CA_1', 'CA_2']
+        self.STORE_IDS = ['CA_1', 'CA_2', 'CA_3', 'CA_4',
+                          'TX_1', 'TX_2', 'TX_3', 'WI_1',
+                          'WI_2', 'WI_3']
 
     def get_data_sample(self, store_id, sample_size=300):
         return self.data[self.data['store_id'] == store_id].reset_index()['profitability'][-sample_size:]
@@ -31,6 +33,7 @@ class ProfitabilityModels:
             logging.error(str(e))
 
     def make_predictions(self):
+        processors = []
         with Manager() as manager:
             results = manager.dict()
 
@@ -39,8 +42,10 @@ class ProfitabilityModels:
                 logging.info(f'Model for {store_id} is fitting..')
                 p = Process(target=self._make_single_prediction, args=(data_sample, store_id, results))
                 p.start()
+                processors.append(p)
 
-            p.join()
+            for processor in processors:
+                processor.join()
 
             logging.info('Results are ready!')
             return pd.concat(results.values())
