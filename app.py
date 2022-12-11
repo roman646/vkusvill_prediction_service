@@ -26,7 +26,7 @@ def upload():
     if request.method == "POST":
         names = os.listdir()
         for i in names:
-            if os.path.isfile(i) and i == 'profitability_prediction.xlsx':
+            if os.path.isfile(i) and i == OUTPUT_FILE_NAME:
                 os.remove(i)
 
         file = request.files["file"]
