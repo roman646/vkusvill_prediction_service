@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 INPUT_FILE_NAME = 'sales_data.xlsx'
-OUTPUT_FILE_NAME = 'profitability_prediction.xlsx'
+OUTPUT_FILE_NAME = 'static/profitability_prediction.xlsx'
 
 
 @app.route('/')
